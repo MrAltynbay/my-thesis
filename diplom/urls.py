@@ -19,9 +19,8 @@ from django.urls import path, include
 from diplom.views import home, about
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('admin/', admin.site.urls),
-    path('cities/', include(('cities.urls', 'cities'))),
-    path('about/', about),
-
+    path("", home, name="home"),
+    path("admin/", admin.site.urls),
+    path("cities/", include(("cities.urls", "cities"))),
+    path("about/", about),
 ]
