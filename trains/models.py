@@ -5,10 +5,9 @@ from cities.models import City
 
 
 class Train(models.Model):
-    name = models.CharField(max_length=50, unique=True,
-                            verbose_name="Номер поезда")
-    travel_time = models.PositiveSmallIntegerField(
-        verbose_name="Время в пути")
+    name = models.CharField(max_length=50,
+                            unique=True, verbose_name="Номер поезда")
+    travel_time = models.PositiveSmallIntegerField(verbose_name="Время в пути")
     from_city = models.ForeignKey(
         City,
         on_delete=models.CASCADE,
@@ -46,4 +45,4 @@ class Train(models.Model):
     class Meta:
         verbose_name = "Поезд"
         verbose_name_plural = "Поезда"
-        ordering = ["name"]
+        ordering = ["travel_time"]
