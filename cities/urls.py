@@ -1,7 +1,12 @@
 from django.urls import path
 
-from cities.views import CityListView, CityDetailView, CityUpdateView,\
-    CityCreateView, CityDeleteView
+from cities.views import (
+    CityListView,
+    CityDetailView,
+    CityUpdateView,
+    CityCreateView,
+    CityDeleteView,
+)
 
 
 urlpatterns = [

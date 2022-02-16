@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 def home(request, pk=None):
 
-    name = "Bob"
+    name = request.user
     return render(request, "home.html", {"name": name})
 
 

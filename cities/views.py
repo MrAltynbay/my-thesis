@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
@@ -25,7 +26,7 @@ __all__ = (
 
 
 def home(request, pk=None):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = CityForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data)
@@ -37,7 +38,7 @@ def home(request, pk=None):
         return render(request, "cities/detail.html", context)
     form = CityForm()
     qs = City.objects.all()
-    lst = Paginator(qs, 2)
+    lst = Paginator(qs, 5)
     page_number = request.GET.get("page")
     page_obj = lst.get_page(page_number)
     context = {"page_obj": page_obj, "form": form}
@@ -49,7 +50,7 @@ class CityDetailView(DetailView):
     template_name = "cities/detail.html"
 
 
-class CityCreateView(SuccessMessageMixin, CreateView):
+class CityCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = City
     form_class = CityForm
     template_name = "cities/create.html"
@@ -57,7 +58,7 @@ class CityCreateView(SuccessMessageMixin, CreateView):
     success_message = "Город успешно создан"
 
 
-class CityUpdateView(SuccessMessageMixin, UpdateView):
+class CityUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = City
     form_class = CityForm
     template_name = "cities/update.html"
@@ -65,9 +66,9 @@ class CityUpdateView(SuccessMessageMixin, UpdateView):
     success_message = "Город успешно отредактирован"
 
 
-class CityDeleteView(DeleteView):
+class CityDeleteView(LoginRequiredMixin, DeleteView):
     model = City
-    # template_name = 'cities/delete.html'
+    template_name = "cities/delete.html"
     success_url = reverse_lazy("cities:home")
 
     def get(self, request, *args, **kwargs):
@@ -76,7 +77,7 @@ class CityDeleteView(DeleteView):
 
 
 class CityListView(ListView):
-    paginate_by = 2
+    paginate_by = 5
     model = City
     template_name = "cities/home.html"
 
