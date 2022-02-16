@@ -1,8 +1,12 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, DeleteView
 
 from cities.models import City
 from routes.forms import RouteForm, RouteModelForm
+from routes.models import Route
 from routes.utils import get_routes
 from trains.models import Train
 
@@ -14,6 +18,9 @@ def home(request):
 
 def find_routes(request):
     if request.method == "POST":
+        # user = request.user
+        # if user.is_authenticated:
+        #     user = request.user
         form = RouteForm(request.POST)
         if form.is_valid():
             try:
@@ -70,3 +77,24 @@ def save_route(request):
     else:
         messages.error(request, "Невозможно сохранить несуществующий маршрут")
         return redirect("/")
+
+
+class RouteListView(ListView):
+    paginate_by = 10
+    model = Route
+    template_name = "routes/list.html"
+
+
+class RouteDetailView(DetailView):
+    queryset = Route.objects.all()
+    template_name = "routes/detail.html"
+
+
+class RouteDeleteView(LoginRequiredMixin, DeleteView):
+    model = Route
+    template_name = "routes/delete.html"
+    success_url = reverse_lazy("home")
+
+    def get(self, request, *args, **kwargs):
+        messages.success(request, "Маршрут успешно удален")
+        return self.post(request, *args, **kwargs)

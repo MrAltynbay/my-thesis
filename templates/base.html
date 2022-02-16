@@ -2,6 +2,8 @@
 {% url 'cities:create' as cities_create_url%}
 {% url 'trains:home' as trains_home_url%}
 {% url 'trains:create' as trains_create_url%}
+{% url 'list' as route_list%}
+
 
 <!doctype html>
 <html lang="en">
@@ -25,7 +27,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav ms-auto">
         <li class="nav-item {% if request.path == cities_home_url %}active {% endif %}">
           <a class="nav-link"
              aria-current="page" href="{% url 'cities:home' %}">Города</a>
@@ -33,22 +35,43 @@
         <li class="nav-item {% if request.path == trains_home_url %}active {% endif %}">
           <a class="nav-link" href="{% url 'trains:home' %}">Поезда</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
+        <li class="nav-item" {% if request.path == route_list%}active {% endif %}>
+          <a class="nav-link" href="{% url 'list' %}">Маршруты</a>
         </li>
-
+        {% if user.is_authenticated %}
         <li class="nav-item dropdown
         {% if request.path == cities_create_url or request.path == trains_create_url%}active {% endif %}
         ">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
            Добавить
           </a>
+
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="{% url 'cities:create' %}">Новый город</a></li>
             <li><a class="dropdown-item" href="{% url 'trains:create' %}">Новый поезд</a></li>
 
           </ul>
+
         </li>
+       {% else %}
+            <li class="nav-item">
+                <a class="nav-link disabled" href="">Добавить</a>
+            </li>
+            {% endif %}
+      {% if user.is_authenticated %}<li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:logout' %}">Выйти</a>
+        </li>
+      {% else %}
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:login' %}">Войти</a>
+          </li>
+           <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:register' %}">Регистрация</a>
+          </li>
+      {% endif %}
+
+
+
       </ul>
     </div>
   </div>
@@ -92,9 +115,11 @@
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
